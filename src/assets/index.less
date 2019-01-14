@@ -1,0 +1,66 @@
+@import '~iview/src/styles/index.less';
+
+// 下面是要覆盖的变量，例如：
+@primary-color: #ff8a34;
+@green-color: #009847;
+@tablehead-color:#E8E3DF;
+// @border-color-split: #fd7a23;
+
+
+// 表格头部背景色
+// @table-thead-bg:@primary-color;
+@table-thead-bg:@tablehead-color;
+// 表格头部文字颜色 表格经过动效
+.@{table-prefix-cls}{
+    overflow: hidden;
+    &-row{
+        &:hover{
+            &:hover{
+                transform: translateY(0px) scale(1.01,1.01);
+                box-shadow: 0 0 5px 2px rgba(0,0,0,.1);
+            }
+        }
+    }
+    th{
+        // color: #fff; 
+        color: #333333;
+        font-size: 12px;
+        // border-right: 1px solid #fd7a23;
+        // border-bottom: 1px solid #fd7a23;
+    }
+    table{
+        width: 100%;
+    }
+}
+
+.@{loading-bar-prefix-cls} {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: @zindex-loading-bar;
+
+    &-inner {
+        transition: width @transition-time linear;
+
+        &-color-primary {
+            background-color: #d15c09;
+        }
+
+        &-failed-color-error {
+            background-color: @error-color;
+        }
+    }
+}
+
+/* 
+    loading 背景
+*/
+
+.@{spin-prefix-cls} {
+    &-fix{
+        background: rgba(0,0,0,0);
+    }
+}
+

@@ -1,0 +1,270 @@
+/* 页面初始化加载样式 */
+
+html, body, #app {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.d2-app-loading-group {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #757F9A;
+    background: -webkit-linear-gradient(to top, #D7DDE8, #757F9A);
+    background: linear-gradient(to top, #D7DDE8, #757F9A);
+}
+
+.d2-app-loading-title {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    letter-spacing: 0.2em;
+}
+
+.d2-app-loading-sub-title {
+    color: #FFF;
+    font-size: 10px;
+}
+
+.d2-app-loading-grid {
+    width: 30px;
+    height: 30px;
+}
+
+.d2-app-loading-grid .d2-app-loading {
+    width: 10px;
+    height: 10px;
+    background-color: #FFF;
+    float: left;
+    -webkit-animation: d2-app-loading-grid-scale-delay 1.3s infinite ease-in-out;
+    animation: d2-app-loading-grid-scale-delay 1.3s infinite ease-in-out;
+}
+
+.d2-app-loading-grid .d2-app-loading1 {
+    border-top-left-radius: 4px;
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.d2-app-loading-grid .d2-app-loading2 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.d2-app-loading-grid .d2-app-loading3 {
+    border-top-right-radius: 4px;
+    -webkit-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
+.d2-app-loading-grid .d2-app-loading4 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.d2-app-loading-grid .d2-app-loading5 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.d2-app-loading-grid .d2-app-loading6 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.d2-app-loading-grid .d2-app-loading7 {
+    border-bottom-left-radius: 4px;
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+
+.d2-app-loading-grid .d2-app-loading8 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.d2-app-loading-grid .d2-app-loading9 {
+    border-bottom-right-radius: 4px;
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+@-webkit-keyframes d2-app-loading-grid-scale-delay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+@keyframes d2-app-loading-grid-scale-delay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+/* style.min.css start */
+
+#facedata {
+    height: 80%;
+}
+
+#canvas {
+    position: absolute;
+}
+
+#img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.clear {
+    clear: both;
+}
+
+#h_line, #tooltip-span, #v_line {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+}
+
+#tooltip-span {
+    background-color: #000;
+    color: #fff;
+    z-index: 1000;
+}
+
+#h_line {
+    outline: 1px solid #ff0;
+    width: 100%;
+}
+
+#v_line {
+    outline: 1px solid red;
+    height: 100%;
+}
+
+.btn-bs-file {
+    position: relative;
+}
+
+.btn-bs-file input[type=file] {
+    position: absolute;
+    top: -9999999;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    outline: 0;
+    cursor: inherit;
+}
+
+.selected {
+    background-color: rgba(18, 189, 220, .3);
+}
+
+.chip {
+    display: inline-block;
+    padding: 0 25px;
+    height: 39px;
+    font-size: 20px;
+    line-height: 35px;
+    border-radius: 25px;
+    border: 1px solid;
+    font-weight: bolder;
+}
+
+.chip img {
+    float: left;
+    margin: 0 10px 0 -26px;
+    height: 39px;
+    width: 39px;
+    border-radius: 50%;
+}
+
+.no-pl {
+    padding-left: 0 !important;
+}
+
+.labelbox, .labelcircle, .labelpolygon {
+    fill: #ff0;
+    stroke: green;
+    stroke-width: 2px;
+    fill-opacity: .1;
+}
+
+.labelpoint {
+    fill: red
+}
+
+.svg_select_points {
+    fill: #000;
+    fill-opacity: .1;
+    stroke: grey;
+}
+
+.svg_select_points_lt {
+    cursor: nw-resize;
+}
+
+.svg_select_points_rt {
+    cursor: ne-resize;
+}
+
+.svg_select_points_rb {
+    cursor: se-resize;
+}
+
+.svg_select_points_lb {
+    cursor: sw-resize;
+}
+
+.svg_select_points_t {
+    cursor: n-resize;
+}
+
+.svg_select_points_r {
+    cursor: e-resize;
+}
+
+.svg_select_points_b {
+    cursor: s-resize;
+}
+
+.svg_select_points_l {
+    cursor: w-resize;
+}
+
+.svg_select_points_rot {
+    stroke-width: 1;
+    stroke: #000;
+    fill: #f9ffed;
+}
+
+.svg_select_points_point {
+    cursor: move;
+}
+
+.svg_select_boundingRect {
+    stroke-width: 1;
+    fill: gray;
+    stroke-dasharray: 10 10;
+    stroke: #000;
+    stroke-opacity: .8;
+    fill-opacity: .1;
+    pointer-events: none;
+}
