@@ -299,330 +299,356 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">数据集管理</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="name">
-                                <Input placeholder="请输入品牌名称" v-model="formData.name" clearable></Input>
-                            </Form-item>
-                        </div>
-                        <!-- <div class="btn-left w18">
+  <div id="Main">
+    <!-- <h2 class="Title">数据集管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="name">
+                <Input placeholder="请输入品牌名称" v-model="formData.name" clearable></Input>
+              </Form-item>
+            </div>
+            <!-- <div class="btn-left w18">
                             <Form-item prop="brandId">
                                 <Select v-model="formData.authorId" placeholder="请选择协作者" clearable>
                                     <Option :value="item.userId" v-for="(item,index) in collaboratorList" :key="index">{{ item.userName }}</Option>
                                 </Select>
                             </Form-item>
-                        </div> -->
-                        
-                    </div>
-                    <div class="btn-right w10">
-                        <div class="searchBox">
-                            <div class="btn-right search-right" @click="submit('form')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
+            </div>-->
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    <addNewBtn  class="btn-right" title="新建" @btnClick="showModel" />
-                    <exportBtn  class="btn-right" title="导出品牌信息" @btnClick="exportBrand" />
-                    <exportBtn  class="btn-right" title="导出产品类别" @btnClick="exportProductShow = true" />
-                    <importBtn  class="btn-right" title="导入" @btnClick="showImportBrand = true" />
-                </div>
-                <hhTable ref="table" :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-            
-            </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
-            </div>
-           
-            <fieldNameDes/>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+          <addNewBtn class="btn-right" title="新建" @btnClick="showModel"/>
+          <exportBtn class="btn-right" title="导出品牌信息" @btnClick="exportBrand"/>
+          <exportBtn class="btn-right" title="导出产品类别" @btnClick="exportProductShow = true"/>
+          <importBtn class="btn-right" title="导入" @btnClick="showImportBrand = true"/>
         </div>
-        <!-- 新建/修改品牌 -->
-        <myModal class="myModal"
-                    @close="closeModel"
-                    width='600'
-                    :modal="addShow">
-                    <div slot="main" class="modal-main">
-                        <div class="header">
-                            {{ type == 'add' ? '新建品牌' : '修改品牌'}}
-                        </div>
-                        <div class="modal-table">
-                            <Form ref="form" class="model-form" :label-width="10">
-                                <Form-item required>
-                                  <div class="item-box">
-                                    <div class="left">
-                                      品牌编号:
-                                    </div>
-                                    <div class="right">
-                                      <Input clearable v-model.trim="addData.code" style="width:200px;" placeholder="限20个字符以内"></Input>
-                                    </div>
-                                  </div>
-                                    
-                                </Form-item>
-                                <Form-item required>
-                                  <div class="item-box">
-                                    <div class="left">
-                                      品牌名称:
-                                    </div>
-                                    <div class="right">
-                                      <Input clearable v-model.trim="addData.name" style="width:200px;" placeholder="限20个字符以内"></Input>
-                                    </div>
-                                  </div>
-                                    
-                                </Form-item>
-                                <Form-item required>
-                                  <div class="item-box">
-                                    <div class="left">
-                                      <p>关联类别:</p>
-                                      <p>(共 {{ allLabelList.length }} 个)</p>
-                                      <p class="tool" @click="showRelation">
-                                        编辑
-                                      </p>
-                                    </div>
-                                    <div class="right">
-                                      <Input clearable v-model.trim="addData.labelData" type="textarea" readonly :rows="4"></Input>
-                                    </div>
-                                  </div>
-                                    
-                                </Form-item>
-                                <Form-item required>
-                                  <div class="item-box">
-                                    <div class="left">
-                                      备注信息:
-                                    </div>
-                                    <div class="right">
-                                      <Input clearable v-model.trim="addData.memo" type="textarea" :rows="4" placeholder="限100个字符以内"></Input>
-                                    </div>
-                                  </div>
-                                    
-                                </Form-item>
-                                
-                            </Form>
-                        </div>
-                        <div class="footer">
-                            <Button @click="save" type="primary">保存</Button>
-                        </div>
-                    </div>
-        </myModal>
+        <hhTable
+          ref="table"
+          :columns="columns"
+          :pageData="pageData"
+          :noneStatus="noneStatus"
+          disabled-hover
+        ></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
 
-        <!-- 导出产品类别 -->
-        <myModal class="myModal"
-                    @close="closeModel"
-                    width='600'
-                    :modal="exportProductShow">
-                    <div slot="main" class="modal-main">
-                        <div class="header">
-                          导出产品类别
-                        </div>
-                        <div class="modal-table">
-                            <div class="boxs">
-                                <Form ref="form" class="form" :model="formData" :label-width="10">
-                                    <div class="container" style="width:60%;">
-                                        <div class="btn-left w18">
-                                            <Form-item prop="userName">
-                                                <Input clearable placeholder="请输入品牌名称" v-model.trim="peopleData.name"></Input>
-                                            </Form-item>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="btn-right w10">
-                                        <div class="searchBox">
-                                            <div class="btn-right search-right" @click="submit('form')">
-                                                <Button shape="circle" @click="filterPeople" icon="ios-search" type="primary">搜索</Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Form>
-                            </div>
-                            <div class="select-box">
-                              <div class="left">
-                                <div class="title">
-                                  待选品牌
-                                  <Checkbox v-model="exportSelectAll" @on-change="exportSelectAllMethod">全选</Checkbox>
-                                </div>
-                                <div class="select-box-main">
-                                  <CheckboxGroup v-model="selectPeopleList" @on-change="peopleChange" style="margin-left:30px;">
-                                    <div class="selected-box">
-                                      <div class="item" v-for="(item,index) in filterPeopleList" :key="index + item.id">
-                                        <Checkbox :disabled="type == 'look'" :label="item.id">
-                                          <span>{{ item.name }}</span>
-                                        </Checkbox>
-                                      </div>
-                                    </div>
-                                  </CheckboxGroup>
-                                </div>
-                              </div>
-                              <div class="right">
-                                <div class="title">
-                                  已选品牌
-                                </div>
-                                <div class="select-box-main">
-                                  <CheckboxGroup v-model="selectedPeopleList" style="margin-left:30px;">
-                                    <div class="selected-box">
-                                      <div class="item" v-for="(item,index) in selectedPeopleList" :key="index">
-                                        <Checkbox disabled :label="item">
-                                          <span>{{ item }}</span>
-                                        </Checkbox>
-                                      </div>
-                                    </div>
-                                  </CheckboxGroup>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <Button v-if="type != 'look'" @click="savePeople" type="primary" style="padding:2px 20px;">导出</Button>
-                        </div>
-                    </div>
-        </myModal>
+      <fieldNameDes/>
+    </div>
+    <!-- 新建/修改品牌 -->
+    <myModal class="myModal" @close="closeModel" width="600" :modal="addShow">
+      <div slot="main" class="modal-main">
+        <div class="header">{{ type == 'add' ? '新建品牌' : '修改品牌'}}</div>
+        <div class="modal-table">
+          <Form ref="form" class="model-form" :label-width="10">
+            <Form-item required>
+              <div class="item-box">
+                <div class="left">品牌编号:</div>
+                <div class="right">
+                  <Input
+                    clearable
+                    v-model.trim="addData.code"
+                    style="width:200px;"
+                    placeholder="限20个字符以内"
+                  ></Input>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item required>
+              <div class="item-box">
+                <div class="left">品牌名称:</div>
+                <div class="right">
+                  <Input
+                    clearable
+                    v-model.trim="addData.name"
+                    style="width:200px;"
+                    placeholder="限20个字符以内"
+                  />
+                </div>
+              </div>
+            </Form-item>
+            <!-- <Form-item required>
+              <div class="item-box">
+                <div class="left">
+                  <p>关联类别:</p>
+                  <p>(共 {{ allLabelList.length }} 个)</p>
+                  <p class="tool" @click="showRelation">编辑</p>
+                </div>
+                <div class="right">
+                  <Input
+                    clearable
+                    v-model.trim="addData.labelData"
+                    type="textarea"
+                    readonly
+                    :rows="4"
+                  ></Input>
+                </div>
+              </div>
+            </Form-item>-->
+            <Form-item required>
+              <div class="item-box">
+                <div class="left">备注信息:</div>
+                <div class="right">
+                  <Input
+                    clearable
+                    v-model.trim="addData.memo"
+                    type="textarea"
+                    :rows="4"
+                    placeholder="限100个字符以内"
+                  />
+                </div>
+              </div>
+            </Form-item>
+          </Form>
+        </div>
+        <div class="footer">
+          <Button @click="save" type="primary">保存</Button>
+        </div>
+      </div>
+    </myModal>
 
-        <!-- 关联标签 -->
-        <myModal class="myModal"
-                    @close="relationlabelShow = false"
-                    width='740'
-                    :modal="relationlabelShow">
-                    <div slot="main" class="modal-main">
-                        <div class="header">
-                          关联标签
-                        </div>
-                        <div class="modal-table">
-                            <div class="boxs">
-  
-                                <Form ref="form" class="form" style="justify-content: space-between;" :model="formData" :label-width="10">
-                                    <div class="container" style="width:85%;">
-                                        <div class="btn-left w18" style="width:33.3333%;">
-                                            <Form-item prop="name">
-                                                <Input placeholder="品牌名称" disabled readonly v-model="labelData.brandName"></Input>
-                                            </Form-item>
-                                        </div>
-                                        <div class="btn-left w18" style="width:33.3333%;">
-                                            <Form-item prop="labelName">
-                                                <Input placeholder="请输入产品类别" v-model="labelData.name" clearable></Input>
-                                            </Form-item>
-                                        </div>
-                                        <!-- <div class="btn-left w18" style="width:33.3333%;">
+    <!-- 导出产品类别 -->
+    <myModal class="myModal" @close="closeModel" width="600" :modal="exportProductShow">
+      <div slot="main" class="modal-main">
+        <div class="header">导出产品类别</div>
+        <div class="modal-table">
+          <div class="boxs">
+            <Form ref="form" class="form" :model="formData" :label-width="10">
+              <div class="container" style="width:60%;">
+                <div class="btn-left w18">
+                  <Form-item prop="userName">
+                    <Input clearable placeholder="请输入品牌名称" v-model.trim="peopleData.name"/>
+                  </Form-item>
+                </div>
+              </div>
+              <div class="btn-right w10">
+                <div class="searchBox">
+                  <div class="btn-right search-right" @click="submit('form')">
+                    <Button shape="circle" @click="filterPeople" icon="ios-search" type="primary">搜索</Button>
+                  </div>
+                </div>
+              </div>
+            </Form>
+          </div>
+          <div class="select-box">
+            <div class="left">
+              <div class="title">
+                待选品牌
+                <Checkbox v-model="exportSelectAll" @on-change="exportSelectAllMethod">全选</Checkbox>
+              </div>
+              <div class="select-box-main">
+                <CheckboxGroup
+                  v-model="selectPeopleList"
+                  @on-change="peopleChange"
+                  style="margin-left:30px;"
+                >
+                  <div class="selected-box">
+                    <div
+                      class="item"
+                      v-for="(item,index) in filterPeopleList"
+                      :key="index + item.id"
+                    >
+                      <Checkbox :disabled="type == 'look'" :label="item.id">
+                        <span>{{ item.name }}</span>
+                      </Checkbox>
+                    </div>
+                  </div>
+                </CheckboxGroup>
+              </div>
+            </div>
+            <div class="right">
+              <div class="title">已选品牌</div>
+              <div class="select-box-main">
+                <CheckboxGroup v-model="selectedPeopleList" style="margin-left:30px;">
+                  <div class="selected-box">
+                    <div class="item" v-for="(item,index) in selectedPeopleList" :key="index">
+                      <Checkbox disabled :label="item">
+                        <span>{{ item }}</span>
+                      </Checkbox>
+                    </div>
+                  </div>
+                </CheckboxGroup>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <Button
+            v-if="type != 'look'"
+            @click="savePeople"
+            type="primary"
+            style="padding:2px 20px;"
+          >导出</Button>
+        </div>
+      </div>
+    </myModal>
+
+    <!-- 关联标签 -->
+    <myModal
+      class="myModal"
+      @close="relationlabelShow = false"
+      width="740"
+      :modal="relationlabelShow"
+    >
+      <div slot="main" class="modal-main">
+        <div class="header">关联标签</div>
+        <div class="modal-table">
+          <div class="boxs">
+            <Form
+              ref="form"
+              class="form"
+              style="justify-content: space-between;"
+              :model="formData"
+              :label-width="10"
+            >
+              <div class="container" style="width:85%;">
+                <div class="btn-left w18" style="width:33.3333%;">
+                  <Form-item prop="name">
+                    <Input placeholder="品牌名称" disabled readonly v-model="labelData.brandName"/>
+                  </Form-item>
+                </div>
+                <div class="btn-left w18" style="width:33.3333%;">
+                  <Form-item prop="labelName">
+                    <Input placeholder="请输入产品类别" v-model="labelData.name" clearable/>
+                  </Form-item>
+                </div>
+                <!-- <div class="btn-left w18" style="width:33.3333%;">
                                             <Form-item prop="articleName">
                                                 <Input placeholder="请输入物体名称" v-model="labelData.articleName" clearable></Input>
                                             </Form-item>
-                                        </div> -->
-                                    </div>
-                                    <div class="btn-right w10">
-                                        <div class="searchBox">
-                                            <div class="btn-right search-right" @click="submit('form')">
-                                                <Button shape="circle" @click="filterLabel" icon="ios-search" type="primary">搜索</Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Form>
-                            </div>
-                            <div class="select-box">
-                              <div class="left">
-                                <div class="title">
-                                  待选类别
-                                  <Checkbox v-model="labelSelectAll" @on-change="labelSelectAllMethod">全选</Checkbox>
-                                </div>
-                                <div class="select-box-main">
-                                  <CheckboxGroup v-model="selectedLableList" @on-change="labelChange" style="margin-left:30px;">
-                                    <div class="selected-box">
-                                      <div class="item" v-for="(item,index) in filterLabelList" :key="index">
-                                        <Checkbox :label="item.id">
-                                          <span>{{ item.name }}</span>
-                                        </Checkbox>
-                                      </div>
-                                      
-                                    </div>
-                                  </CheckboxGroup>
-                                </div>
-                              </div>
-                              <div class="right">
-                                <div class="title">
-                                  已选类别
-                                </div>
-                                <div class="select-box-main">
-                                  <CheckboxGroup v-model="selectLabelList" style="margin-left:30px;">
-                                    <div class="selected-box">
-                                      <div class="item" v-for="(item,index) in selectLabelList" :key="index">
-                                        <Checkbox disabled :label="item">
-                                          <span>{{ item }}</span>
-                                        </Checkbox>
-                                      </div>
-                                    </div>
-                                  </CheckboxGroup>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="footer" style="margin-top:10px;">
-                            <Button @click="saveSelectedLabel" type="primary" style="padding:2px 20px;">确定</Button>
-                        </div>
+                </div>-->
+              </div>
+              <div class="btn-right w10">
+                <div class="searchBox">
+                  <div class="btn-right search-right" @click="submit('form')">
+                    <Button shape="circle" @click="filterLabel" icon="ios-search" type="primary">搜索</Button>
+                  </div>
+                </div>
+              </div>
+            </Form>
+          </div>
+          <div class="select-box">
+            <div class="left">
+              <div class="title">
+                待选类别
+                <Checkbox v-model="labelSelectAll" @on-change="labelSelectAllMethod">全选</Checkbox>
+              </div>
+              <div class="select-box-main">
+                <CheckboxGroup
+                  v-model="selectedLableList"
+                  @on-change="labelChange"
+                  style="margin-left:30px;"
+                >
+                  <div class="selected-box">
+                    <div class="item" v-for="(item,index) in filterLabelList" :key="index">
+                      <Checkbox :label="item.id">
+                        <span>{{ item.name }}</span>
+                      </Checkbox>
                     </div>
-        </myModal>
-
-         <!-- 查看关联标签数 -->
-        <myModal class="myModal"
-                    @close="showRelationLabel = false"
-                    width='600'
-                    :modal="showRelationLabel">
-                    <div slot="main" class="modal-main">
-                        
-                        <div class="modal-table" style="margin:0;">
-                            <Table :columns="lableColumns" :height="relationLabelData.length > 8 ? '520' : ''"  :data="relationLabelData"></Table>
-                        </div>
-                    </div>
-        </myModal>
-
-         <!-- 查看协助人数 -->
-        <myModal class="myModal"
-                    @close="showPeople = false"
-                    width='500'
-                    :modal="showPeople">
-                    <div slot="main" class="modal-main">
-                        
-                        <div class="modal-table" style="margin:0;">
-                            <Table :columns="peopleColumns" :height="peopleDataList.length > 8 ? '520' : ''"  :data="peopleDataList"></Table>
-                        </div>
-                    </div>
-        </myModal>
-
-        <!--品牌导入 -->
-      <myModal class="myModal"
-            @close="closeModal"
-            :modal="showImportBrand">
-            <div slot="main" class="modal-main" style="padding:10px;">
-              <h3>品牌导入</h3>
-              <div class="modal-table" >
-                  <Form ref="form" :label-width="88">
-                      <div style="overflow:hidden;">
-                          <div class='upDate'>
-                              <Upload :action="importUrl" 
-                              :show-upload-list=false
-                              :on-success='brandHandleSuccess'
-                              :on-error='handleError'
-                              >
-                              <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                              <span>{{ importBrandData.uploadText }}</span>
-                              </Upload>
-                          </div>
-                      </div>
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="closeModal" type="primary">取消</Button>
-                          <Button @click="importExcel" type="success">导入</Button>
-                      </div>
-                  </Form>
+                  </div>
+                </CheckboxGroup>
               </div>
             </div>
-      </myModal>
-	</div>
+            <div class="right">
+              <div class="title">已选类别</div>
+              <div class="select-box-main">
+                <CheckboxGroup v-model="selectLabelList" style="margin-left:30px;">
+                  <div class="selected-box">
+                    <div class="item" v-for="(item,index) in selectLabelList" :key="index">
+                      <Checkbox disabled :label="item">
+                        <span>{{ item }}</span>
+                      </Checkbox>
+                    </div>
+                  </div>
+                </CheckboxGroup>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer" style="margin-top:10px;">
+          <Button @click="saveSelectedLabel" type="primary" style="padding:2px 20px;">确定</Button>
+        </div>
+      </div>
+    </myModal>
+
+    <!-- 查看关联标签数 -->
+    <myModal
+      class="myModal"
+      @close="showRelationLabel = false"
+      width="600"
+      :modal="showRelationLabel"
+    >
+      <div slot="main" class="modal-main">
+        <div class="modal-table" style="margin:0;">
+          <Table
+            :columns="lableColumns"
+            :height="relationLabelData.length > 8 ? '520' : ''"
+            :data="relationLabelData"
+          ></Table>
+        </div>
+      </div>
+    </myModal>
+
+    <!-- 查看协助人数 -->
+    <myModal class="myModal" @close="showPeople = false" width="500" :modal="showPeople">
+      <div slot="main" class="modal-main">
+        <div class="modal-table" style="margin:0;">
+          <Table
+            :columns="peopleColumns"
+            :height="peopleDataList.length > 8 ? '520' : ''"
+            :data="peopleDataList"
+          ></Table>
+        </div>
+      </div>
+    </myModal>
+
+    <!--品牌导入 -->
+    <myModal class="myModal" @close="closeModal" :modal="showImportBrand">
+      <div slot="main" class="modal-main" style="padding:10px;">
+        <h3>品牌导入</h3>
+        <div class="modal-table">
+          <Form ref="form" :label-width="88">
+            <div style="overflow:hidden;">
+              <div class="upDate">
+                <Upload
+                  :action="importUrl"
+                  :show-upload-list="false"
+                  :on-success="brandHandleSuccess"
+                  :on-error="handleError"
+                >
+                  <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                  <span>{{ importBrandData.uploadText }}</span>
+                </Upload>
+              </div>
+            </div>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="closeModal" type="primary">取消</Button>
+              <Button @click="importExcel" type="success">导入</Button>
+            </div>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
@@ -763,6 +789,7 @@ export default {
                       click: () => {
                         let data = {
                           brandId: params.row.id
+                          // brandName: params.row.name
                         };
                         this.Global.doPost(
                           "brandCategory/doCategoryCount.json",
@@ -818,6 +845,32 @@ export default {
                   }
                 },
                 "[查看]"
+              )
+            );
+            tag.push(
+              h(
+                "a",
+                {
+                  style: {
+                    textDecoration: "underline",
+                    display:
+                      params.row.imageNum == 0 || params.row.imageNum
+                        ? "inline"
+                        : "none"
+                  },
+                  on: {
+                    click: () => {
+                      let query = {
+                        brandId: params.row.id
+                      };
+                      this.$router.push({
+                        path: "/categoryManagement",
+                        query
+                      });
+                    }
+                  }
+                },
+                "[管理]"
               )
             );
             return h(
@@ -1044,7 +1097,6 @@ export default {
   methods: {
     handleError() {},
     brandHandleSuccess(response, file, fileList) {
-      console.log(file);
       this.importBrandData.uploadText = file.name;
       var url = response.data;
       if (url) {
@@ -1271,32 +1323,6 @@ export default {
     //   }
     //   return check;
     // },
-    // 上传文件
-    uploadFile() {
-      if (!this.uploadList.length) {
-        this.$Message.info("请选择文件上传");
-        return false;
-      }
-      let arr = [];
-      let flag = false;
-      this.uploadList.forEach(item => {
-        if (item.status != "finished") {
-          flag = true;
-        }
-        arr.push({
-          dataId: this.uploadData.dataId,
-          filePath: item.data
-        });
-      });
-      if (flag) {
-        this.$Message.info("等文件上传完毕后再操作");
-        return false;
-      }
-      this.Global.doPost("dataSet/doUploadPic.file", arr, res => {
-        this.$Message.success("上传成功");
-        this.uploadShow = false;
-      });
-    },
     showModel() {
       this.type = "add";
       this.addShow = true;
@@ -1323,16 +1349,10 @@ export default {
       data["status"] = 1;
       this.Global.doPost("brand/doQueryWithPage.json", data, res => {
         this.pageData = res.datalist;
-
         this.pageNum = res.items;
         this.page = res.page;
         this.noneStatus = true;
       });
-    }
-  },
-  filters: {
-    sizeFilter(val) {
-      return `${(val / 1024 / 1024).toFixed(1)}M`;
     }
   }
 };

@@ -5,7 +5,7 @@
   margin-right: 20px;
   overflow: hidden;
   width: 100%;
-  height: 150px;
+  height: 130px;
   display: flex;
   flex-direction: row;
   
@@ -28,14 +28,14 @@
 .btn-con {
   position: absolute;
   top: 0;
-  height: 130px;
+  height: 110px;
   width: 30px;
   background: #fff;
   padding-top: 3px;
   z-index: 11;
   
   box-sizing: border-box;
-  padding-top: 50px;
+  padding-top: 40px;
   cursor: pointer;
   &.left-btn {
     left: 0px;
@@ -48,8 +48,8 @@
 .imgBox {
   position: relative;
   width: 10%;
-  min-width: 100px;
-  height: 120px;
+  min-width: 80px;
+  height: 100px;
   box-sizing: border-box;
   display: inline-block;
   padding: 0 5px;
@@ -57,7 +57,7 @@
   img {
     display: block;
     width: 100%;
-    height: 120px;
+    height: 100px;
     &.active {
       border: 1px solid red;
     }
@@ -120,13 +120,7 @@ export default {
     }
   },
   props: {
-    imageList: Array,
-    beforePush: {
-      type: Function,
-      default: item => {
-        return true;
-      }
-    }
+    imageList: Array
   },
   computed: {
   },
@@ -141,70 +135,11 @@ export default {
       });
       this.$emit("imageClick", { item, index });
     },
-    itemTitle(item) {
-      if (typeof item.title === "object") {
-        return this.$t(item.title.i18n);
-      } else {
-        return item.title;
-      }
-    },
-    //给Tag添加选择的边框
-    borderStyle(path, name) {
-      if (path === name) {
-        return {
-          border: "1px solid #ff8a34 !important"
-        };
-      } else {
-        return {
-          border: "1px solid #e8eaec !important"
-        };
-      }
-    },
     imgClickLeft(){
       this.$emit('moveImageLeft')
     },
     imgClickRight(){
       this.$emit('moveImageRight')
-    },
-    closePage(event, name) {
-      let pageOpenedList = this.$store.state.app.pageOpenedList;
-      let lastPageObj = pageOpenedList[0];
-      if (this.currentPageName === name) {
-        let len = pageOpenedList.length;
-        for (let i = 1; i < len; i++) {
-          if (pageOpenedList[i].path === name) {
-            if (i < len - 1) {
-              lastPageObj = pageOpenedList[i + 1];
-            } else {
-              lastPageObj = pageOpenedList[i - 1];
-            }
-            break;
-          }
-        }
-      } else {
-        let tagWidth = event.target.parentNode.offsetWidth;
-        this.tagBodyLeft = Math.min(this.tagBodyLeft + tagWidth, 0);
-      }
-      this.$store.commit("removeTag", name);
-      this.$store.commit("closePage", name);
-      pageOpenedList = this.$store.state.app.pageOpenedList;
-      sessionStorage.pageOpenedList = JSON.stringify(pageOpenedList);
-      if (this.currentPageName === name) {
-        this.linkTo(lastPageObj);
-      }
-    },
-    linkTo(item) {
-      let routerObj = {};
-      routerObj.path = item.path;
-      if (item.argu) {
-        routerObj.params = item.argu;
-      }
-      if (item.query) {
-        routerObj.query = item.query;
-      }
-      if (this.beforePush(item)) {
-        this.$router.push(routerObj);
-      }
     },
     handlescroll(e) {
       var type = e.type;

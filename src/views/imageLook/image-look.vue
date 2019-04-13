@@ -417,6 +417,7 @@ export default {
       let n = index + 1 + (this.page - 1) * this.pageSize;
       img.onload = () => {
         let { width, height } = img;
+        let imageScale = this.getImageScale(width, height) || 1;
         this.imgSelected = {
           name,
           src,
@@ -424,8 +425,10 @@ export default {
           width,
           height,
           index: n,
-          scaledHeight: height,
-          scaledWidth: width
+          // scaledHeight: height,
+          // scaledWidth: width,
+          scaledHeight: height * imageScale,
+          scaledWidth: width * imageScale
         };
         this.mount();
       };
@@ -440,6 +443,11 @@ export default {
     changePage(size) {
       this.page = size;
       this.init();
+    },
+    getImageScale(width, height) {
+      let h = $("#canvas-container").height();
+      let w = $("#canvas-container").width();
+      return Math.min(w / width, h / height);
     },
     mount() {
       $("#canvas-container img")

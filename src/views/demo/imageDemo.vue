@@ -190,7 +190,7 @@
                   <Icon class="icon" type="ios-arrow-dropleft" size='30' />
                 </div>
               </div>
-              <div class="worker-box">
+              <div class="worker-box" v-if="showCanvas">
                 <div id="canvas-container">
                   <img id="img" :src="imgSelected.src" />
                   <div id="work-canvas">
@@ -327,6 +327,7 @@ export default {
     return {
       showRotate: false,
       childData: true,
+      showCanvas: true,
       dataNameList: [], //数据集列表
       // 表格数据开始
       pageData: [],
@@ -511,6 +512,12 @@ export default {
   },
   watch: {},
   methods: {
+    isShowCanvas() {
+      this.showCanvas = false;
+      this.$nextTick(() => {
+        this.showCanvas = true;
+      });
+    },
     rotateImg(val) {
       this.rotateImage(this.imgSelected.src, this.imgSelected.rotate);
     },
@@ -821,16 +828,19 @@ export default {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       let img = new Image();
+      img.crossOrigin = "anonymous";
       img.src = src || null;
       let newH = null;
       let newW = null;
       let imageData = null;
       img.onload = function() {
         let { width, height } = img;
+        console.log(width, height);
         newW =
           Math.abs(width * Math.cos(deg)) + Math.abs(height * Math.sin(deg));
         newH =
           Math.abs(height * Math.cos(deg)) + Math.abs(width * Math.sin(deg));
+        console.log(newW, newH);
         canvas.style.width = newW + "px";
         canvas.style.height = newH + "px";
         canvas.width = newW;
@@ -840,6 +850,7 @@ export default {
         ctx.translate(-newW / 2, -newH / 2);
         ctx.drawImage(img, (newW - width) / 2, (newH - height) / 2);
         imageData = canvas.toDataURL("image/jpg");
+        console.log(imageData);
         return imageData;
       };
     },
@@ -850,10 +861,10 @@ export default {
       } else {
         let index = this.getImageIndex();
         let imgSrc = this.getImageData(src, angle);
-        console.log(imgSrc);
         this.$set(this.imgSelected, "src", imgSrc);
         this.imageList[index].src = imgSrc;
         this.imageClick(this.imageList[index], index);
+        this.isShowCanvas();
       }
     },
     mount(value) {

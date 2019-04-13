@@ -63,55 +63,58 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">新建角色</h2> -->
-        <div class="main-container">
-          <div class="box">
-            <Form :model="formData" :label-width="88" :rules="rules" >
-                <Row >
-                    <Col span='6'>
-                        <Form-item label='角色名称' prop='name' required>
-                           <Input v-model.trim='formData.name' placeholder="请输入角色名称"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='6'>
-                        <Form-item label='角色说明' prop='description'>
-                           <Input v-model.trim='formData.description' placeholder="请输入角色说明"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='6'>
-                        <Form-item label=' ' :label-width="30" >
-                          <Checkbox v-model="formData.isDataSetPower">操作数据集权限</Checkbox>
-                        </Form-item>
-                    </Col>
-                </Row>
-            </Form>           
-          </div>
-          <div class="box buttonBox">
-              <Form :label-width="88" ref="form" :rules="rules" >
-                  <Row >
-                      <Col span='24'>
-                          <h4>菜单选择:</h4>
-                          <div class="selectBox">
-                              <div class="left">
-                                <Tree @on-check-change='checkChange' ref="fatherTree" :data="baseData" show-checkbox></Tree>
-                              </div>
-                              <div class="right">
-                                <Tree :data="checkedData" ref="tree"></Tree>
-                              </div>
-                          </div>
-                      </Col>
-                  </Row>
-              </Form>    
-              <div class="btn">
-                  <Button @click="cancel" class="btnSearch" type="info">取消</Button>
-                  <Button @click="submit('form')" class="btnSearch" type="success">保存</Button>
-              </div>      
-          </div>
+  <div id="Main">
+    <!-- <h2 class="Title">新建角色</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form :model="formData" :label-width="88" :rules="rules">
+          <Row>
+            <Col span="6">
+              <Form-item label="角色名称" prop="name" required>
+                <Input v-model.trim="formData.name" placeholder="请输入角色名称"/>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="角色说明" prop="description">
+                <Input v-model.trim="formData.description" placeholder="请输入角色说明"/>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label=" " :label-width="30">
+                <Checkbox v-model="formData.isDataSetPower">操作数据集权限</Checkbox>
+              </Form-item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div class="box buttonBox">
+        <Form :label-width="88" ref="form" :rules="rules">
+          <Row>
+            <Col span="24">
+              <h4>菜单选择:</h4>
+              <div class="selectBox">
+                <div class="left">
+                  <Tree
+                    @on-check-change="checkChange"
+                    ref="fatherTree"
+                    :data="baseData"
+                    show-checkbox
+                  ></Tree>
+                </div>
+                <div class="right">
+                  <Tree :data="checkedData" ref="tree"></Tree>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+        <div class="btn">
+          <Button @click="cancel" class="btnSearch" type="info">取消</Button>
+          <Button @click="submit('form')" class="btnSearch" type="success">保存</Button>
         </div>
-        
-        
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -155,7 +158,7 @@ export default {
 
       return newArr;
     };
-    this.Global.doPost("menu/doQueryAll.json", {}, res => {
+    this.Global.doPost("menu/doQueryAll.json", { status: 1 }, res => {
       this.baseData = [];
       let arr = implode(res, 0, 1);
       arr.sort((a, b) => a.orderIndex - b.orderIndex);
@@ -323,8 +326,6 @@ export default {
                           ]
                         });
                       } else {
-                        //arr不为空时
-                        // debugger
                         let flag1 = null;
 
                         arr.forEach(a => {
@@ -399,43 +400,8 @@ export default {
       });
       this.checkedData = arr;
     },
-    // checkChange(val) {
-    //   const arr = []; //定义children为空的集合
-    //   const children = []; //定义children不为空的集合
-    //   const jh = []; //定义和children内容相同的集合
-    //   val.forEach((item, index) => {
-    //     if (item.children.length === 0) {
-    //       arr.push({
-    //         title: item.title,
-    //         index
-    //       });
-    //     }
-    //     if (item.children.length > 0) {
-    //       children.push(...item.children);
-    //     }
-    //   });
-    //   arr.forEach(item => {
-    //     children.forEach(j => {
-    //       if (item.title === j.title) {
-    //         jh.push(item);
-    //       }
-    //     });
-    //   });
-    //   jh.forEach(item => {
-    //     val.forEach((j, i) => {
-    //       if (item.title === j.title) {
-    //         val.splice(i, 1);
-    //       }
-    //     });
-    //   });
-    //   this.checkedData = JSON.parse(JSON.stringify(val));
-    // },
     cancel() {
       this.$router.back();
-    },
-    dataChange(val) {
-      var treeData = this.$refs.tree.getCheckedNodes();
-      console.log(treeData);
     },
     createNewAccount() {
       this.type = "add";
@@ -496,8 +462,6 @@ export default {
         data["menus"] = idList;
         data["status"] = 1;
       }
-      console.log(data);
-      // return;
       this.Global.doPost("role/doSave.json", data, res => {
         this.$router.back();
       });

@@ -40,11 +40,15 @@ export let tools = {
             desp: "Create a Boundary boxrectangle",
             icon: "rectangle.svg",
             drawable: true,
-            create(myCanvas) {
-                var rect = myCanvas.nested().rect().addClass('labelbox shape')/* .draw() */;
+            create(myCanvas, maxX, maxY) {
+                var rect = myCanvas.nested().rect().addClass('labelbox shape') /* .draw() */ ;
                 rect.resize();
-                // rect.parent().draggable();
-                rect.draggable();
+                rect.draggable({
+                    minX: 0,
+                    minY: 0,
+                    maxX,
+                    maxY
+                });
                 return rect;
             },
             validate(el) {
@@ -54,17 +58,17 @@ export let tools = {
         "tool-polygon": {
             type: "poly",
             title: "Polygon",
-            id:"tool-polygon",
+            id: "tool-polygon",
             desp: "Create a concave polygon",
             icon: "polygon.svg",
             drawable: true,
-            create (myCanvas) {//TODO: bug: creating duplicate points
-                var poly = myCanvas.nested().polygon().addClass('labelpolygon shape')/* .draw() */;
+            create(myCanvas) { //TODO: bug: creating duplicate points
+                var poly = myCanvas.nested().polygon().addClass('labelpolygon shape') /* .draw() */ ;
                 poly.resize();
                 poly.parent().draggable();
 
-                poly.on('drawstart', function (e) {
-                    document.addEventListener('keydown', function (e) {
+                poly.on('drawstart', function(e) {
+                    document.addEventListener('keydown', function(e) {
                         if (e.keyCode == 13) {
                             poly.draw('done');
                             poly.off('drawstart');
@@ -74,7 +78,7 @@ export let tools = {
 
                 return poly;
             },
-            validate: function (el) {
+            validate: function(el) {
                 return true;
             },
         }
@@ -95,10 +99,10 @@ function getPointToDraw(position, container, canvasOffset) {
     // Get the parent svg element that surrounds the container
     var parentSvg = $('#' + container.node.id).closest('svg');
     var containerOffset = {
-        x: parseInt(parentSvg.attr("x"), 10) || 0,
-        y: parseInt(parentSvg.attr("y"), 10) || 0
-    }
-    // Feature point size should be local to each image
+            x: parseInt(parentSvg.attr("x"), 10) || 0,
+            y: parseInt(parentSvg.attr("y"), 10) || 0
+        }
+        // Feature point size should be local to each image
     var featurePointSize = labellingData[imgSelected.name].featurePointSize;
     var point = container.parent().circle()
         .radius(Math.floor(featurePointSize))

@@ -10,20 +10,20 @@ let dommain = location.hostname; // 主机域名
 let port = location.port;
 
 if (dommain.search('112.124.18.48') != -1 || dommain.search('op.hzhuihe.cn') != -1 || (dommain.search('localhost') != -1 && port == '8083')) {
-    RUNTIME_ENVIRONMENT = 'TEST'//测试环境
-    // RUNTIME_ENVIRONMENT = 'pro'//正式环境
+    RUNTIME_ENVIRONMENT = 'TEST' //测试环境
+        // RUNTIME_ENVIRONMENT = 'pro' //正式环境
 } else {
     RUNTIME_ENVIRONMENT = 'pro'
 }
 
 // RUNTIME_ENVIRONMENT = "TEST"
 
-if (port == '8091') {
+if (port == '8085') {
     RUNTIME_ENVIRONMENT = 'dev'
 }
 var PROJECT_CONFIG = {};
 
-
+// RUNTIME_ENVIRONMENT = "TEST"
 
 if (RUNTIME_ENVIRONMENT === "dev") {
     /*
@@ -69,7 +69,7 @@ if (RUNTIME_ENVIRONMENT === "TEST") {
         'clientType': 'WEB',
         'rootPath': 'web',
         'dataServer': 'http://112.124.18.48:8090/hzai/',
-        // 'dataServer': 'http://192.168.1.138:8080/hzai-web/',//张权
+        // 'dataServer': 'http://192.168.1.140:8080/hzai-web/', //张权
         'downloadServer': 'http://112.124.18.48:8090',
         'ossServer': 'https://hbrand.oss-cn-hangzhou.aliyuncs.com/',
         'fileServer': 'http://112.124.18.48:8090/',

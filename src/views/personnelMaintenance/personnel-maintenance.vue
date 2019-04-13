@@ -14,10 +14,10 @@
   // justify-content: center;
   align-items: center;
   .container {
-    width: 35%;
+    width: 52.5%;
 
     .w18 {
-      width: 50%;
+      width: 33.3333%;
     }
   }
   .w10 {
@@ -117,122 +117,164 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">人员维护</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="name">
-                                <Input placeholder="请输入姓名" v-model="formData.userName"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="phone">
-                                <Input placeholder="请输入手机号" v-model="formData.phone"></Input>
-                            </Form-item>
-                        </div>
-                        
-                    </div>
-                    <div class="btn-right w10">
-                        <div class="searchBox">
-                            <div class="btn-right search-right" @click="submit('form')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">人员维护</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="name">
+                <Input placeholder="请输入姓名" v-model="formData.userName"></Input>
+              </Form-item>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    <addNewBtn  class="btn-right" title="新建" @btnClick="showModel" />
-                </div>
-                <hhTable ref="table" :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-            
+            <div class="btn-left w18">
+              <Form-item prop="phone">
+                <Input placeholder="请输入手机号" v-model="formData.phone"></Input>
+              </Form-item>
             </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
+            <div class="btn-left w18">
+              <Form-item prop="phone">
+                <!-- <Input placeholder="所属企业" v-model="formData.phone"></Input> -->
+                <Select v-model="formData.companyId" placeholder="所属企业" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in companyList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
             </div>
-           
-            <fieldNameDes/>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+          <addNewBtn class="btn-right" title="新建" @btnClick="showModel"/>
         </div>
-         <myModal class="myModal"
-                    @close="closeModel"
-                    width='600'
-                    :modal="addShow">
-                    <div slot="main" class="modal-main">
-                      <div class="header">
-                          {{ type == 'add' ? '新建' : '修改'}}
-                      </div>
-                      <div class="modal-table">
-                          <Form ref="form" class="model-form" :label-width="10">
-                              <Form-item>
-                                <div class="item-box">
-                                  <div class="left">
-                                    <span>*</span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:
-                                  </div>
-                                  <div class="right">
-                                    <Input v-model.trim="addData.userName" placeholder="请输入姓名" clearable></Input>
-                                  </div>
-                                </div>
-                                  
-                              </Form-item>
-                              <Form-item>
-                                <div class="item-box">
-                                  <div class="left">
-                                    <span>*</span>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
-                                  </div>
-                                  <div class="right">
-                                    <Input :disabled="type == 'modify'" v-model.trim="addData.loginAccount" placeholder="请输入账户"></Input>
-                                  </div>
-                                </div>
-                              </Form-item>
-                              <Form-item label="">
-                                <div class="item-box">
-                                  <div class="left">
-                                    <span>*</span>手机号码:
-                                  </div>
-                                  <div class="right">
-                                    <Input v-model.trim="addData.phone" placeholder="请输入手机号码" clearable></Input>
-                                  </div>
-                                </div>
-                              </Form-item>
-                              <Form-item v-if="type == 'add'">
-                                <div class="item-box">
-                                  <div class="left">
-                                    <span>*</span>初始密码:
-                                  </div>
-                                  <div class="right">
-                                    <Input type="password" v-model.trim="addData.loginPwd" placeholder="支持英文数字符号且20个字符以内" clearable></Input>
-                                  </div>
-                                </div>
-                              </Form-item>
-                              <Form-item>
-                                <div class="item-box">
-                                  <div class="left">
-                                    <span>*</span>角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色:
-                                  </div>
-                                  <div class="right">
-                                    <!-- <Input v-model.trim="addData.role" placeholder="限英20个字符以内" clearable></Input> -->
-                                    <Select multiple v-model="addData.roles" placeholder="请选择角色" clearable>
-                                      <Option :value="item.id" v-for="(item,index) in roleList" :key="index">{{ item.name }}</Option>
-                                    </Select>
-                                  </div>
-                                </div>
-                              </Form-item>
-                              
-                          </Form>
-                      </div>
-                      <div class="footer">
-                          <Button @click.native="save" type="primary" style="padding:4px 20px;">保存</Button>
-                      </div>
-                    </div>
-          </myModal>
-	</div>
+        <hhTable
+          ref="table"
+          :columns="columns"
+          :pageData="pageData"
+          :noneStatus="noneStatus"
+          disabled-hover
+        ></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+
+      <fieldNameDes/>
+    </div>
+    <myModal class="myModal" @close="closeModel" width="600" :modal="addShow">
+      <div slot="main" class="modal-main">
+        <div class="header">{{ type == 'add' ? '新建' : '修改'}}</div>
+        <div class="modal-table">
+          <Form ref="form" class="model-form" :label-width="10">
+            <Form-item>
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>企业组织:
+                </div>
+                <div class="right">
+                  <!-- <Input v-model.trim="addData.userName" placeholder="请输入姓名" clearable></Input> -->
+                  <Select v-model="addData.companyId" placeholder="所属企业" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in companyList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item>
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:
+                </div>
+                <div class="right">
+                  <Input v-model.trim="addData.userName" placeholder="请输入姓名" clearable></Input>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item>
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                </div>
+                <div class="right">
+                  <Input
+                    :disabled="type == 'modify'"
+                    v-model.trim="addData.loginAccount"
+                    placeholder="请输入账户"
+                  ></Input>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item label>
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>手机号码:
+                </div>
+                <div class="right">
+                  <Input v-model.trim="addData.phone" placeholder="请输入手机号码" autocomplete="off" clearable></Input>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item v-if="type == 'add'">
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>初始密码:
+                </div>
+                <div class="right">
+                  <Input
+                    type="password"
+                    v-model.trim="addData.loginPwd"
+                    placeholder="支持英文数字符号且20个字符以内"
+                    clearable
+                    autocomplete="off"
+                  ></Input>
+                </div>
+              </div>
+            </Form-item>
+            <Form-item>
+              <div class="item-box">
+                <div class="left">
+                  <span>*</span>角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色:
+                </div>
+                <div class="right">
+                  <!-- <Input v-model.trim="addData.role" placeholder="限英20个字符以内" clearable></Input> -->
+                  <Select multiple v-model="addData.roles" placeholder="请选择角色" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in roleList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </div>
+              </div>
+            </Form-item>
+          </Form>
+        </div>
+        <div class="footer">
+          <Button @click.native="save" type="primary" style="padding:4px 20px;">保存</Button>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
@@ -264,13 +306,19 @@ export default {
         brandId: "",
         labelName: ""
       },
-      brandList: [],
+      companyList: [],
       page: 1,
       pageNum: 0,
       columns: [
         {
           title: "序号",
           type: "index"
+        },
+        {
+          title: "所属企业",
+          key: "companyName",
+          align: "center",
+          tooltip: true
         },
         {
           title: "姓名",
@@ -335,6 +383,7 @@ export default {
                         this.addData.userId = params.row.userId;
                         this.addData.userName = params.row.userName;
                         this.addData.loginAccount = params.row.loginAccount;
+                        this.addData.companyId = params.row.companyId;
                         this.type = "modify";
                         this.addShow = true;
                       }
@@ -407,6 +456,7 @@ export default {
     };
   },
   created() {
+    this.queryAllCompanyList();
     this.queryRoleList();
     this.init();
   },
@@ -420,11 +470,21 @@ export default {
     }
   },
   methods: {
+    //查询所有的公司
+    queryAllCompanyList() {
+      this.Global.doPost("company/doQueryAll.json", {}, res => {
+        this.companyList = res;
+      });
+    },
     showModel() {
       this.type = "add";
       this.addShow = true;
     },
     save() {
+      if (!this.addData.companyId) {
+        this.$Message.info("企业组织不能为空");
+        return false;
+      }
       if (!this.addData.userName) {
         this.$Message.info("姓名不能为空");
         return false;

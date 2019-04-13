@@ -3,7 +3,7 @@ export function indexOf(arr, property, val) {
         if (arr[i][property] === val) return i;
     }
 
-    return -1;//if not found
+    return -1; //if not found
 }
 export function findInArray(arr, property, val) {
     for (var i = 0; i < arr.length; i++) {
@@ -28,10 +28,10 @@ export function getPointToDraw(appConfig, position, container, canvasOffset) {
     // Get the parent svg element that surrounds the container
     var parentSvg = $('#' + container.node.id).closest('svg');
     var containerOffset = {
-        x: parseInt(parentSvg.attr("x"), 10) || 0,
-        y: parseInt(parentSvg.attr("y"), 10) || 0
-    }
-    // Feature point size should be local to each image
+            x: parseInt(parentSvg.attr("x"), 10) || 0,
+            y: parseInt(parentSvg.attr("y"), 10) || 0
+        }
+        // Feature point size should be local to each image
     var featurePointSize = labellingData[imgSelected.name].featurePointSize;
     var point = container.parent().circle()
         .radius(Math.floor(featurePointSize))
@@ -65,7 +65,6 @@ export function getShape(shapeId, labellingData) {
     return findInArray(labellingData.shapes, "id", shapeId);
 }
 export function updateShapeDetailInStore(scale, shapeId, bbox, points, labellingData) {
-
     var shapes = labellingData.shapes;
     var shape = getShape(shapeId, labellingData);
     var index = indexOf(shapes, "id", shapeId);
@@ -129,7 +128,7 @@ export function scaleShape(id, type, bbox, points, scale) {
 
 export let appConfig = {
     autosave: {
-        syncingInterval: 10 * 1000,  //10 seconds
+        syncingInterval: 10 * 1000, //10 seconds
         enable: true,
         deleteIfExported: true, //Mark the data as saved when exported as nimn format, and delte the copy from browser cache.
     },
@@ -160,7 +159,7 @@ export function attachPointToShape(scale, shapeId, pointid, position) {
 }
 export function imgNameOpt(name) {
     let str = ''
-    if(!name) return ""
+    if (!name) return ""
     let arr = name.split('.');
     let aa = arr[arr.length - 1];
     str = name.substring(0, 3) + '***.jpg';

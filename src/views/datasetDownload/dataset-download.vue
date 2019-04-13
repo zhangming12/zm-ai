@@ -82,7 +82,7 @@
       padding-left: 20px;
     }
     .modal-table {
-      max-height: 500px;
+      // max-height: 500px;
       margin-top: 10px;
       padding: 10px;
       display: flex;
@@ -110,96 +110,156 @@
     }
   }
 }
+.search-box {
+  margin-top: 10px;
+  .s-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .s-left {
+      width: 70px;
+    }
+    .s-right {
+      flex: 1;
+    }
+  }
+}
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">数据集下载</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="labelName">
-                                <Select v-model="formData.dataId" placeholder="请选择数据集名称" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in dataNameList" :key="index">{{ item.name }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        
-                    </div>
-                    <div class="btn-right w10">
-                        <div class="searchBox">
-                            <div class="btn-right search-right" @click="submit('form')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">数据集下载</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="labelName">
+                <Select v-model="formData.dataId" placeholder="请选择数据集名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in dataNameList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    <!-- <exportBtn  class="btn-right" title="批量下载" @btnClick="showModel" /> -->
-                </div>
-                <hhTable ref="table" :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-            
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
             </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
-            </div>
-           
-            <fieldNameDes/>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
         </div>
-        <myModal class="myModal"
-                    @close="closeModel"
-                    width='600'
-                    :modal="addShow">
-                    <div slot="main" class="modal-main">
-                        <div class="header">
-                            下载数据集
-                        </div>
-                    <div class="modal-table" style="padding-top:0;">
-                      <div class="contentTop">
-                        <refreshBtn class="btn-right" @click.native="queryDownloadData(downloadData.id)"/>
-                      </div>
-                        <Table ref="table" :columns="columns1" :data="downloadList" disabled-hover></Table>
+        <hhTable
+          ref="table"
+          :columns="columns"
+          :pageData="pageData"
+          :noneStatus="noneStatus"
+          disabled-hover
+        ></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
 
-                        <h3 style="margin-top:10px;">请选择本次下载的对应标签</h3>
-                        <div class="select-box">
-                            <Checkbox @on-change='selectedAll' style="margin-bottom:10px;" v-model="selectAll">全选</Checkbox>
-                            <CheckboxGroup v-model="selectedData">
-                              <div class="main-box">
-                                <div class="item" v-for="(item,index) in labelList" :key="index">
-                                  <Checkbox :label="item.labelId">
-                                      <span>{{ item.articleName }}</span>
-                                  </Checkbox>
-                                </div>
-                              </div>
-                            </CheckboxGroup>
-                        </div>
+      <fieldNameDes/>
+    </div>
+    <myModal class="myModal" @close="closeModel" width="700" :modal="addShow">
+      <div slot="main" class="modal-main">
+        <div class="header">下载数据集</div>
+        <div class="modal-table" style="padding-top:0;">
+          <div class="contentTop">
+            <refreshBtn class="btn-right" @click.native="queryDownloadData(downloadData.id)"/>
+          </div>
+          <Table ref="table" :columns="columns1" :data="downloadList" disabled-hover></Table>
+          <div class="search-box">
+            <Row>
+              <Col span="9">
+                <div class="s-item">
+                  <div class="s-left">物体名称:</div>
+                  <div class="s-right">
+                    <Input v-model.trim="downData.articleName" clearable placeholder="请输入物体名称"/>
+                  </div>
+                </div>
+              </Col>
+              <Col span="9" offset="1">
+                <div class="s-item">
+                  <div class="s-left">品牌筛选:</div>
+                  <div class="s-right">
+                    <Select v-model="downData.brandId" placeholder="请选择品牌归属" clearable>
+                      <Option
+                        :value="item.id"
+                        v-for="(item,index) in brandList"
+                        :key="index"
+                      >{{ item.name }}</Option>
+                    </Select>
+                  </div>
+                </div>
+              </Col>
+              <Col span="3" offset="1">
+                <div class="s-item">
+                  <div class="searchBox">
+                    <div class="btn-right search-right" @click="filterLabel">
+                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                     </div>
-                    <div class="footer">
-                        <Button @click="submitTask" type="primary">提交任务</Button>
-                    </div>
-                    </div>
-        </myModal>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+          <h3 style="margin-top:10px;">请选择本次下载的对应标签</h3>
+          <div class="select-box">
+            <Checkbox @on-change="selectedAll" style="margin-bottom:10px;" v-model="selectAll">全选</Checkbox>
+            <CheckboxGroup v-model="selectedData">
+              <div class="main-box">
+                <template v-for="(item,index) in filterLabelList">
+                  <div class="item" :key="item.labelId" v-if="index < 50">
+                    <Checkbox :label="item.labelId">
+                      <span>{{ item.articleName }}</span>
+                    </Checkbox>
+                  </div>
+                </template>
+              </div>
+            </CheckboxGroup>
+          </div>
+        </div>
+        <div class="footer">
+          <Button @click="submitTask" type="primary">提交任务</Button>
+        </div>
+      </div>
+    </myModal>
 
-         <!-- 查看关联标签数 -->
-        <myModal class="myModal"
-                    @close="showRelationLabel = false"
-                    width='600'
-                    :modal="showRelationLabel">
-                    <div slot="main" class="modal-main">
-                        
-                        <div class="modal-table" style="margin:0;padding:0;">
-                            <Table :columns="lableColumns" :height="relationLabelData.length > 8 ? '520' : ''"  :data="relationLabelData"></Table>
-                        </div>
-                    </div>
-        </myModal>
-	</div>
+    <!-- 查看关联标签数 -->
+    <myModal
+      class="myModal"
+      @close="showRelationLabel = false"
+      width="600"
+      :modal="showRelationLabel"
+    >
+      <div slot="main" class="modal-main">
+        <div class="modal-table" style="margin:0;padding:0;">
+          <Table
+            :columns="lableColumns"
+            :height="relationLabelData.length > 8 ? '520' : ''"
+            :data="relationLabelData"
+          ></Table>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
@@ -221,6 +281,8 @@ export default {
   },
   data() {
     return {
+      dataId: "",
+      brandList: [],
       lableColumns: [
         // {
         //   title: "序号",
@@ -249,10 +311,13 @@ export default {
       type: "", //add--新建  modify--修改
       noneStatus: false,
       formData: {
-        brandId: "",
         labelName: ""
       },
+      downData: {
+        articleName: ""
+      },
       labelList: [],
+      filterLabelList: [],
       page: 1,
       pageNum: 0,
       columns: [
@@ -490,14 +555,18 @@ export default {
                         this.downloadData.id = params.row.id;
                         this.queryDownloadData(params.row.id);
                         this.Global.doPost(
-                          "dataLabel/doQueryDataLabeledList.json",
+                          "dataLabel/doQueryDataLabelWithPage.json",
                           {
-                            dataId: params.row.id
+                            dataId: params.row.id,
+                            needCount: false
                           },
                           res => {
                             let arr = [];
-                            this.labelList = res;
+                            this.dataId = params.row.id;
+                            this.filterLabelList = res.datalist;
+                            this.queryBrandList();
                             this.addShow = true;
+                            // this.filterLabel();
                           }
                         );
                       }
@@ -606,10 +675,11 @@ export default {
         this.downloadData = {};
         this.selectedData = [];
         this.selectAll = false;
+        this.downData = {};
       }
     },
     selectedData(val) {
-      if (val.length == this.labelList.length) {
+      if (val.length == this.filterLabelList.length) {
         this.selectAll = true;
       } else {
         this.selectAll = false;
@@ -617,14 +687,36 @@ export default {
     }
   },
   methods: {
+    filterLabel() {
+      // let val = this.downData.articleName;
+      // if (!val) {
+      //   this.filterLabelList = [...this.labelList];
+      // } else {
+      //   this.filterLabelList = this.labelList.filter(
+      //     item => item.articleName.indexOf(val) != -1
+      //   );
+      // }
+      let data = this.Global.JsonChange(this.downData);
+      data["needCount"] = false;
+      data["dataId"] = this.dataId;
+      this.Global.doPost(
+        "dataLabel/doQueryDataLabelWithPage.json",
+        data,
+        res => {
+          this.filterLabelList = res.datalist;
+        }
+      );
+    },
     submitTask() {
-      if (!this.selectedData.length) {
-        this.$Message.info("请选择标签");
-        return false;
-      }
+      // if (!this.selectedData.length) {
+      //   this.$Message.info("请选择标签");
+      //   return false;
+      // }
       let data = {};
+      if (this.selectedData.length) {
+        data["ids"] = this.selectedData;
+      }
       data["dataId"] = this.downloadData.id;
-      data["ids"] = this.selectedData;
 
       this.Global.doPost("downloadTask/doSave.json", data, res => {
         this.$Message.success("提交成功");
@@ -649,16 +741,23 @@ export default {
     selectedAll(val) {
       this.selectedData = [];
       if (val) {
-        this.labelList.forEach(item => {
+        this.filterLabelList.forEach(item => {
           this.selectedData.push(item.labelId);
         });
+        this.selectedData = this.unitArr(this.selectedData);
       } else {
-        this.selectedData = [];
+        // this.selectedData = [];
+        this.filterLabelList.forEach(item => {
+          // this.selectedData.push(item.labelId);
+          let i = this.selectedData.indexOf(item.labelId);
+          if (i != -1) {
+            this.selectedData.splice(i, 1);
+          }
+        });
       }
     },
-    showModel() {
-      this.type = "add";
-      this.addShow = true;
+    unitArr(arr) {
+      return [...new Set(arr)];
     },
     closeModel() {
       this.addShow = false;
@@ -670,6 +769,15 @@ export default {
     changePage(size) {
       this.page = size;
       this.init();
+    },
+    queryBrandList() {
+      if (!this.brandList.length)
+        this.Global.doPost("brand/doQueryAll.json", { status: 1 }, res => {
+          if (res && res.length) {
+            this.brandList = res;
+            // this.addShow
+          }
+        });
     },
     init() {
       let name = "";

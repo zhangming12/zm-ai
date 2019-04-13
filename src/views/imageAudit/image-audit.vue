@@ -91,7 +91,7 @@
           z-index: 1;
           .tooltip {
             position: absolute;
-            width: 200px;
+            width: 250px;
             min-height: 100px;
             border: 1px solid #e5e5e5;
             background-color: white;
@@ -164,11 +164,11 @@
 }
 .main-container {
   padding-bottom: 0 !important;
-  // display: flex;
+  display: flex;
   flex-direction: row;
   .main-left,
   .main-right {
-    width: 50%;
+    // width: 50%;
     height: 100%;
     float: left;
     .box {
@@ -176,133 +176,205 @@
       min-width: 200px;
     }
   }
-  .margin-right {
+  .main-right {
     padding-left: 30px;
+    width: 500px !important;
+  }
+  .main-left {
+    flex: 1;
   }
 }
 </style>
 
 <template>
-    <div id="Main" @keydown="keyChange">
-      <div class="main-container">
-        <div class="main-left">
-          <div class="box canvas-box">
-            <div class="left-box">
-              <div class="left">
-                <div class="icon-box" @click="beforeImage(false)">
-                  <Icon class="icon" type="ios-arrow-dropleft" size='30' />
-                </div>
+  <div id="Main" @keydown="keyChange">
+    <div class="main-container">
+      <div class="main-left">
+        <div class="box canvas-box">
+          <div class="left-box">
+            <div class="left">
+              <div class="icon-box" @click="beforeImage(false)">
+                <Tooltip content="上一张">
+                  <Icon class="icon" type="ios-arrow-dropleft" size="30"/>
+                </Tooltip>
               </div>
-              <div class="worker-box">
-                <div id="canvas-container">
-                  <img id="img" :src="imgSelected.src" />
-                  <div id="work-canvas">
-                    <div class="tooltip" v-if="showTooltip">
-                      <Input placeholder="请输入标签名称" v-model="label" clearable></Input>
-                      <div class="btn-box">
-                        <Button type="info" @click="cancel">取消</Button>
-                        <Button type="primary" @click="sureClick">确定</Button>
-                      </div>
-                      <div class="select-box">
-                        <ul>
-                          <li v-for="(item,index) in filterList" :key="index" @click="lableClick(item)">
-                            {{ item.articleName }}
-                          </li>
-                        </ul>
-                      </div>
+            </div>
+            <div class="worker-box">
+              <div id="canvas-container">
+                <img id="img" :src="imgSelected.src">
+                <div id="work-canvas">
+                  <div class="tooltip" v-if="showTooltip">
+                    <Input placeholder="请输入标签名称" v-model="label" clearable/>
+                    <div class="btn-box">
+                      <Button type="info" @click="cancel">取消</Button>
+                      <Button type="primary" @click="sureClick">确定</Button>
+                    </div>
+                    <div class="select-box">
+                      <ul>
+                        <li
+                          v-for="(item,index) in filterList"
+                          :key="index"
+                          @click="lableClick(item)"
+                        >{{ item.articleName }}</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
-                <div class="name-box">
-                    {{ imgSelected.name }}(当前第<span class="numColor">{{ imgSelected.index + 1 }}</span>张)
-                </div>
               </div>
-              <div class="right">
-                <div class="fun-box" >
-                    <Button style="padding:0; margin-left:5px;" @click="zoom('add')" type="default">
-                        <Icon type="ios-add-circle-outline" size="28"/>
-                    </Button>
-                </div>
-                <div class="fun-box" >
-                    <Button style="padding:0; margin-left:5px;" type="default" @click="zoom('reduce')">
-                        <Icon type="ios-remove-circle-outline" size="28"/>
-                    </Button>
-                </div>
-                <div class="fun-box" @click="startLabel('label')">
+              <div class="name-box">
+                {{ imgSelected.name }}(当前第
+                <span class="numColor">{{ imgSelected.index + 1 }}</span>张)
+              </div>
+            </div>
+            <div class="right">
+              <div class="fun-box">
+                <Tooltip content="放大">
+                  <Button style="padding:0; margin-left:5px;" @click="zoom('add')" type="default">
+                    <Icon type="ios-add-circle-outline" size="28"/>
+                  </Button>
+                </Tooltip>
+              </div>
+              <div class="fun-box">
+                <Tooltip content="缩小">
+                  <Button
+                    style="padding:0; margin-left:5px;"
+                    type="default"
+                    @click="zoom('reduce')"
+                  >
+                    <Icon type="ios-remove-circle-outline" size="28"/>
+                  </Button>
+                </Tooltip>
+              </div>
+              <div class="fun-box" @click="startLabel('label')">
+                <Tooltip content="标注">
                   <img v-if="selectedTool" src="@/assets/image/clip-color.png">
                   <img v-else src="@/assets/image/clip.png">
-                </div>
-                <div class="fun-box" @click="startLabel('delete')">
+                </Tooltip>
+              </div>
+              <div class="fun-box" @click="startLabel('delete')">
+                <Tooltip content="删除">
                   <img src="@/assets/image/delete.png">
-                </div>
-                <div class="fun-box" >
-                  <img @click="startLabel('light')" v-if="showLight" src="@/assets/image/light-color.png">
+                </Tooltip>
+              </div>
+              <div class="fun-box">
+                <Tooltip content="亮度">
+                  <img
+                    @click="startLabel('light')"
+                    v-if="showLight"
+                    src="@/assets/image/light-color.png"
+                  >
                   <img @click="startLabel('light')" v-else src="@/assets/image/light.png">
-                  <div class="light-box" v-if="showLight">
-                    <Slider v-model="appConfig.imageOpacity" :step="0.1" :min="0" :max="2.0" @on-change.self="changeFillOpacity"></Slider>
-                  </div>
+                </Tooltip>
+                <div class="light-box" v-if="showLight">
+                  <Slider
+                    v-model="appConfig.imageOpacity"
+                    :step="0.1"
+                    :min="0"
+                    :max="2.0"
+                    @on-change.self="changeFillOpacity"
+                  ></Slider>
                 </div>
-                <div class="fun-box" >
-                    <Button v-if="!isfull" style="padding:0; margin-left:5px;" @click="launchFullscreen" type="default">
-                        <Icon type="ios-expand" size="28"/>
-                    </Button>
-                    <Button v-else style="padding:0; margin-left:5px;" @click="exitFullscreen" type="default">
-                        <Icon type="ios-contract" size="28"/>
-                    </Button>
-                </div>
-                <div class="icon-box" @click="nextImage(false)">
-                  <Icon class="icon" type="ios-arrow-dropright" size='30' />
-                </div>
-                
+              </div>
+              <div class="fun-box">
+                <Tooltip content="全屏">
+                  <Button
+                    v-if="!isfull"
+                    style="padding:0; margin-left:5px;"
+                    @click="launchFullscreen"
+                    type="default"
+                  >
+                    <Icon type="ios-expand" size="28"/>
+                  </Button>
+                  <Button
+                    v-else
+                    style="padding:0; margin-left:5px;"
+                    @click="exitFullscreen"
+                    type="default"
+                  >
+                    <Icon type="ios-contract" size="28"/>
+                  </Button>
+                </Tooltip>
+              </div>
+              <div class="icon-box" @click="nextImage(false)">
+                <Tooltip content="下一张">
+                  <Icon class="icon" type="ios-arrow-dropright" size="30"/>
+                </Tooltip>
               </div>
             </div>
           </div>
-          <div class="btn-box">
-            <Button type="primary" class="btn-right" @click="saveImageLable('next')">保存</Button>
-          </div>
         </div>
-        <div class="main-right">
-          <div class="box" style="margin-bottom:20px;">
-            <Form ref="form" class="form" :model="formData" :label-width="10">
-                <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item prop="labelName">
-                            <Select v-model="formData.dataId" placeholder="请选择数据集名称" @on-change="queryLabelList" clearable>
-                                <Option :value="item.dataId" v-for="(item,index) in dataNameList" :key="index">{{ item.dataName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                </div>
-                <div class="btn-right w10">
-                    <div class="searchBox">
-                        <div class="btn-right search-right" style="width:100%;" @click="submit('form')">
-                            <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                        </div>
-                    </div>
-                </div>
-            </Form>
-            <p>
-              剩 <span class="numColor"> {{ imageNum }} </span>张图片
-            </p>
-          </div>
-          <div class="imageListBox" style="margin-bottom:20px;" v-if="imageList.length">
-            <imageTagsPages v-if="childData" @moveImageRight="nextImage(false)" @moveImageLeft="beforeImage(false)" @imageClick="changeImage" class="imageTagsPages" :imageList="imageList"/>
-          </div>
-          <div class="right-box" v-if="imageList.length">
-              <Table @on-row-click="rowClick" :data="pageData" disabled-hover :height="pageData.length >= 8 ? '400' : ''" :columns="columns" @on-filter-change="filterChange"></Table>
-              <p style="margin:10px 0 0 10px;">
-                共
-                <span class="numColor">{{ pageData.length }}</span>
-                个标签
-              </p>
-          </div>
-          <div class="box" v-else style="text-align:center;line-height:200px;">
-            暂无数据
-          </div>
+        <div class="btn-box">
+          <Button type="primary" class="btn-right" @click="saveImageLable('next')">保存</Button>
         </div>
       </div>
+      <div class="main-right">
+        <div class="box" style="margin-bottom:20px;">
+          <Form ref="form" class="form" :model="formData" :label-width="10">
+            <div class="container">
+              <div class="btn-left w18">
+                <Form-item prop="labelName">
+                  <Select
+                    v-model="formData.dataId"
+                    placeholder="请选择数据集名称"
+                    @on-change="queryLabelList"
+                    clearable
+                  >
+                    <Option
+                      :value="item.dataId"
+                      v-for="(item,index) in dataNameList"
+                      :key="index"
+                    >{{ item.dataName }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+            <div class="btn-right w10">
+              <div class="searchBox">
+                <div class="btn-right search-right" style="width:100%;" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
+            </div>
+          </Form>
+          <p>
+            剩
+            <span class="numColor">{{ imageNum }}</span>张图片
+          </p>
+        </div>
+        <div class="imageListBox" style="margin-bottom:20px;" v-if="imageList.length">
+          <imageTagsPages
+            v-if="childData"
+            @moveImageRight="nextImage(false)"
+            @moveImageLeft="beforeImage(false)"
+            @imageClick="changeImage"
+            class="imageTagsPages"
+            :imageList="imageList"
+          />
+        </div>
+        <div class="right-box" v-if="imageList.length">
+          <Table
+            ref="table"
+            @on-row-click="rowClick"
+            :data="pageData"
+            disabled-hover
+            :height="pageData.length >= 8 ? '400' : ''"
+            :columns="columns"
+            @on-filter-change="filterChange"
+          ></Table>
+          <p style="margin:10px 0 0 10px;">
+            共
+            <span class="numColor">{{ pageData.length }}</span>
+            个标签
+          </p>
+          <p style="margin:10px 0 0 10px;">
+            标注人:
+            <span class="numColor">{{ userName }}</span>
+          </p>
+        </div>
+        <div class="box" v-else style="text-align:center;line-height:200px;">暂无数据</div>
+      </div>
     </div>
-    
+  </div>
 </template>
 
 
@@ -347,6 +419,7 @@ export default {
         imageOpacity: 1,
         featurePointColor: "#ee0000"
       },
+      highLightId: null,
       copiedElements: [],
       labellingData: {},
       alreadyDrawing: false,
@@ -356,7 +429,10 @@ export default {
       filterFlag: null,
       isfull: false,
       dataId: "", //数据集ID
-      labelList: [] //标签列表
+      labelList: [], //标签列表
+      imageLabelList: new Set(),
+      userName: ""
+      // isDrawstop:true
     };
   },
   created() {
@@ -388,7 +464,12 @@ export default {
             "div",
             {
               style: {
-                color: params.row.warning ? "red" : ""
+                color:
+                  this.highLightId == params.row.id
+                    ? "purple"
+                    : params.row.warning
+                    ? "red"
+                    : ""
               }
             },
             params.row.articleName
@@ -400,10 +481,11 @@ export default {
         }
       };
       let filter = [];
-      this.labelList.forEach(item => {
+      // let imageLabelList = [...this.imageLabelList];
+      this.imageLabelList.forEach(item => {
         filter.push({
-          label: item.articleName,
-          value: item.articleName
+          label: item,
+          value: item
         });
       });
       obj.filters = filter;
@@ -465,11 +547,24 @@ export default {
                     }
                   );
                   let warning = params.row.warning;
-
+                  // params.row.warning = !params.row.warning;
                   this.labellingData[this.imgSelected.name].shapes[
                     index
                   ].warning = warning ? false : true;
-
+                  // if (warning) {
+                  //   $(`#${id}`).css({
+                  //     fill: "",
+                  //     stroke: "green"
+                  //   });
+                  // } else {
+                  //   $(`#${id}`).css({
+                  //     fill: "blue",
+                  //     stroke: "red"
+                  //   });
+                  //   this.selecteLabelId = id;
+                  // }
+                  // this.selecteLabelId = id;
+                  // this.highLightId = id;
                   this.mount();
                 }
               }
@@ -503,11 +598,11 @@ export default {
   mounted() {
     $(document).on("click", e => {
       if (this.selectedElement) {
-        let id = this.selectedElement.node.id;
+        let id = this.selectedElement.node.id || this.selectedElement.id;
         this.id = id;
         let val = this.getPositions();
         if (val) {
-          let { x, y } = this.getPositions();
+          let { x, y } = val;
           this.flag = true;
           this.showTooltip = true;
           this.alreadyDrawing = false;
@@ -522,9 +617,7 @@ export default {
           });
         }
       }
-      // this.deselectAll();
-      // this.selectedElements = [];
-      // this.selectedElement = null;
+      this.alreadyDrawing = false;
     });
     let height = $(".main-container").height();
     $("#canvas-container").css({ height: height - 80 + "px" });
@@ -542,6 +635,20 @@ export default {
   },
   watch: {},
   methods: {
+    getIdIsWarning(id) {
+      let data = this.pageData;
+      let len = data.length;
+      let flag = false;
+      for (let i = 0; i < len; i++) {
+        if (data[i].id == id) {
+          if (data[i].warning) {
+            flag = true;
+            return flag;
+          }
+        }
+      }
+      return flag;
+    },
     getImageScale(width, height) {
       let h = $("#canvas-container").height();
       let w = $("#canvas-container").width();
@@ -587,8 +694,26 @@ export default {
     },
     rowClick(row) {
       let { id } = row;
+      this.highLightId = id;
+      // this.$nextTick(() => {
+      if (this.selecteLabelId) {
+        if (this.getIdIsWarning(this.selecteLabelId)) {
+          $(`#${this.selecteLabelId}`).css({
+            fill: "blue",
+            stroke: "red"
+          });
+        } else {
+          $(`#${this.selecteLabelId}`).css({
+            stroke: "green"
+          });
+        }
+      }
       this.selecteLabelId = id;
-      this.mount();
+      // });
+      $(`#${id}`).css({
+        stroke: "yellow"
+      });
+      this.alreadyDrawing = false;
     },
     refreshChild() {
       this.childData = false;
@@ -596,9 +721,7 @@ export default {
         this.childData = true;
       });
     },
-    keyChange(e) {
-      console.log("ceshi");
-    },
+    keyChange(e) {},
     filterChange(val) {
       this.filterFlag = val._filterChecked;
       this.mount();
@@ -677,16 +800,12 @@ export default {
       this.$set(this.imageList[index], "selected", true);
     },
     changeImage(val) {
-      //   if (!this.labellingData[this.imgSelected.name].shapes.length) {
       let { item, index } = val;
       this.imageList.forEach(item => {
         this.$set(item, "selected", false);
       });
       this.$set(this.imageList[index], "selected", true);
       this.imageClick(this.imageList[index], index);
-      //   } else {
-      //     this.saveImageLable(val);
-      //   }
       this.refreshChild();
     },
     getPointsData() {
@@ -695,24 +814,29 @@ export default {
       let arr = this.labellingData[this.imgSelected.name].shapes;
       arr.forEach(item => {
         let obj = {};
+        let flag = false;
         this.labelList.forEach(val => {
           if (item.label == val.articleName) {
             obj.labelId = val.labelId;
+            flag = true;
           }
         });
-        if (item.warning) {
-          warning = true;
-          obj["status"] = 0;
-        } else {
-          obj["status"] = 2;
+        // obj.labelId = item.labelId;
+        if (flag) {
+          if (item.warning) {
+            warning = true;
+            obj["status"] = 0;
+          } else {
+            obj["status"] = 2;
+          }
+          obj["id"] = item.tagId;
+          obj.points = `${item.points[0]},${item.points[1]},${parseInt(
+            item.points[0],
+            10
+          ) + parseInt(item.points[2], 10)},${parseInt(item.points[1], 10) +
+            parseInt(item.points[3], 10)}`;
+          data.push(obj);
         }
-        obj["id"] = item.tagId;
-        obj.points = `${item.points[0]},${item.points[1]},${parseInt(
-          item.points[0],
-          10
-        ) + parseInt(item.points[2], 10)},${parseInt(item.points[1], 10) +
-          parseInt(item.points[3], 10)}`;
-        data.push(obj);
       });
       return {
         data,
@@ -720,6 +844,7 @@ export default {
       };
     },
     imageClick(item, index) {
+      this.imageLabelList = [];
       let { src, name, id } = item;
       let img = new Image();
       img.src = src;
@@ -734,7 +859,9 @@ export default {
           width,
           height,
           index,
+          status: item.status,
           change: false,
+          checkStatus: item.checkStatus,
           dataPictureId: item.id,
           scaledHeight: height * imageScale,
           scaledWidth: width * imageScale
@@ -753,12 +880,24 @@ export default {
             pointIndex: 0, // Used to generate new ids for feature points
             featurePointSize: 3 // Stores featurePointSize per image
           };
+        } else {
+          let arr = this.labellingData[this.imgSelected.name].shapes;
+          let imageLabelList = [];
+          if (arr.length) {
+            arr.forEach(item => {
+              imageLabelList.push(item.label);
+            });
+          }
+          this.imageLabelList = [...new Set(imageLabelList)];
         }
         this.mount();
+        this.$refs["table"].handleFilterReset(0);
+        this.userName = item.userName;
       };
     },
     //获取tooltip的位置
     getPositions() {
+      // if(!this.alreadyDrawing)
       let shape = null;
       this.labellingData[this.imgSelected.name].shapes.forEach(item => {
         if (item.id == this.id) {
@@ -788,12 +927,20 @@ export default {
     saveImageLable(type) {
       if (this.labellingData[this.imgSelected.name].shapes.length) {
         let data = {};
-        data["tagForms"] = this.getPointsData().data;
-        let flag = this.getPointsData().warning;
+        let pointData = this.getPointsData();
+        data["tagForms"] = pointData.data;
+        let flag = pointData.warning;
         data["id"] = this.imgSelected.dataPictureId;
+        data["checkStatus"] = this.imgSelected.checkStatus == 4 ? 6 : 2;
         data["dataId"] = this.dataId;
         data["status"] = flag ? 4 : 5;
-        // 4 不通过  5 通过
+        // 4 不通过  5 通过 7 通过
+        if (this.imgSelected.status == 6) {
+          if (!flag) {
+            data["status"] = 7;
+          }
+        }
+        console.log(data);
         this.Global.doPost("dataPictureRef/doSave.json", data, res => {
           this.$Message.success("保存成功");
           if (type == "next") {
@@ -834,11 +981,14 @@ export default {
         this.$Message.info("标签名不合法");
         return false;
       }
-      this.pageData.push({
+      this.pageData.unshift({
         articleName: this.label,
         id: this.id,
         warning: false
       });
+      let arr = this.imageLabelList;
+      arr.push(this.label);
+      this.imageLabelList = [...new Set(arr)];
       this.labellingData[this.imgSelected.name].shapes.forEach(item => {
         if (item.id == this.id) {
           this.$set(item, "label", this.label);
@@ -889,7 +1039,11 @@ export default {
           !this.flag &&
           this.selectedTool.drawable
         ) {
-          var currentTool = this.selectedTool.create(this.myCanvas);
+          var currentTool = this.selectedTool.create(
+            this.myCanvas,
+            this.imgSelected.scaledWidth,
+            this.imgSelected.scaledHeight
+          );
           this.moveOnlyOnMoveTool(currentTool);
           this.attachShapeListener(currentTool);
 
@@ -944,7 +1098,8 @@ export default {
         img.shapes.forEach(shape => {
           //each shape should zoom in relation to the image's scale
           shape.zoomScale =
-            shape.zoomScale * this.imgSelected.imageScale / preImgSelectedScale;
+            (shape.zoomScale * this.imgSelected.imageScale) /
+            preImgSelectedScale;
         });
       }
       this.rescaleImage();
@@ -1009,7 +1164,7 @@ export default {
           var shape = this.labellingData[this.imgSelected.name].shapes[
             shapeIndex
           ];
-          this.pageData.push({
+          this.pageData.unshift({
             id: shape.id,
             articleName: shape.label,
             labelId: shape.labelId,
@@ -1025,9 +1180,6 @@ export default {
     drawShape(shape, value) {
       if (!shape) return;
       if (this.filterFlag && this.filterFlag.length) {
-        // if (shape.label != this.filterFlag) {
-        //   return;
-        // }
         if (this.filterFlag.indexOf(shape.label) == -1) {
           return false;
         }
@@ -1042,29 +1194,19 @@ export default {
             .move(shape.points[0] * scale, shape.points[1] * scale)
             .addClass("labelbox shape")
             .id(shape.id)
-            .resize();
+            .resize()
+            .draggable({
+              minX: 0,
+              minY: 0,
+              maxX: this.imgSelected.scaledWidth,
+              maxY: this.imgSelected.scaledHeight
+            });
           if (shape.warning) {
-            this.$nextTick(() => {
-              $(`#${shape.id}`).css({
-                fill: "blue",
-                stroke: "red"
-              });
+            $(`#${shape.id}`).css({
+              fill: "blue",
+              stroke: "red"
             });
           }
-          if (shape.id == this.selecteLabelId) {
-            this.$nextTick(() => {
-              $(`#${shape.id}`).css({
-                stroke: "yellow"
-              });
-            });
-          }
-          // rect.parent().draggable();
-          rect.draggable({
-            minX: 0,
-            minY: 0,
-            maxX: this.imgSelected.scaledWidth,
-            maxY: this.imgSelected.scaledHeight
-          });
           //Add feature points
           currentShape = rect;
           break;
@@ -1153,22 +1295,44 @@ export default {
     },
     attachShapeListener(shape) {
       shape.on("drawstart", () => {
+        // this.isDrawstop = false;
         this.alreadyDrawing = true;
+        console.log("drawstart");
       });
 
-      shape.on("drawcancel", () => {});
+      shape.on("drawcancel", () => {
+        this.alreadyDrawing = false;
+      });
 
       shape.on("resizedone", () => {
-        updateShapeDetailInStore(
-          this.imgSelected.imageScale,
-          shape.node.id,
-          shape.rbox(this.myCanvas),
-          this.getPoints(shape),
-          this.labellingData[this.imgSelected.name]
-        );
+        // updateShapeDetailInStore(
+        //   this.imgSelected.imageScale,
+        //   shape.node.id,
+        //   shape.rbox(this.myCanvas),
+        //   this.getPoints(shape),
+        //   this.labellingData[this.imgSelected.name]
+        // );
+        // this.alreadyDrawing = false;
+        let dom = $(`#${shape.node.id}`);
+        let x = parseInt(dom.attr("x"));
+        let y = parseInt(dom.attr("y"));
+        let width = parseInt(dom.attr("width"));
+        let height = parseInt(dom.attr("height"));
+        let scale = 1 / this.imgSelected.imageScale;
+        let points = [x * scale, y * scale, width * scale, height * scale];
+        let shapes = this.labellingData[this.imgSelected.name].shapes;
+        for (let i = 0, len = shapes.length; i < len; i++) {
+          if (shapes[i].id == shape.node.id) {
+            shapes[i].points = points;
+            return;
+          }
+        }
+        this.alreadyDrawing = false;
       });
 
       shape.on("drawstop", () => {
+        console.log("drawstop");
+        // this.isDrawstop = true;
         // this.alreadyDrawing = false;
         if (!this.selectedTool.validate(shape)) {
           //Don't draw an element on accidentle click
@@ -1178,6 +1342,24 @@ export default {
           this.attachShapeData(shape);
           this.attachEvents(shape);
         }
+      });
+
+      shape.on("dragend", () => {
+        let dom = $(`#${shape.node.id}`);
+        let x = parseInt(dom.attr("x"));
+        let y = parseInt(dom.attr("y"));
+        let width = parseInt(dom.attr("width"));
+        let height = parseInt(dom.attr("height"));
+        let scale = 1 / this.imgSelected.imageScale;
+        let points = [x * scale, y * scale, width * scale, height * scale];
+        let shapes = this.labellingData[this.imgSelected.name].shapes;
+        for (let i = 0, len = shapes.length; i < len; i++) {
+          if (shapes[i].id == shape.node.id) {
+            shapes[i].points = points;
+            return;
+          }
+        }
+        this.alreadyDrawing = false;
       });
     },
     moveOnlyOnMoveTool(el) {
@@ -1302,10 +1484,6 @@ export default {
             if (!e.ctrlKey) {
               //deselect rest selected elements
               this.deselectAll();
-
-              //选中框的回调
-              // console.log(currentTool.node.id);
-              //   riot.mount("label-panel", { id: currentTool.node.id });
             }
             //select currnt element
             currentTool.selectize({
@@ -1351,12 +1529,6 @@ export default {
               let shapes = [];
               if (item.tagVOS) {
                 item.tagVOS.forEach(val => {
-                  let label = "";
-                  this.labelList.forEach(n => {
-                    if (n.labelId == val.labelId) {
-                      label = n.articleName;
-                    }
-                  });
                   let points = val.points.split(",");
                   // points[2] = points[2] - points[0];
                   // points[3] = points[3] - points[1];
@@ -1365,7 +1537,7 @@ export default {
                   shapes.push({
                     id: `svgs${val.id}`,
                     zoomScale: 1,
-                    label,
+                    label: val.articleName,
                     tagId: val.id,
                     labelId: val.labelId,
                     bbox: [],

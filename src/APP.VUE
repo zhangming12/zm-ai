@@ -6,7 +6,64 @@
 
 <script>
 export default {
-  name: "app"
+  provide() {
+    return {
+      app: this
+    };
+  },
+  data() {
+    return {
+      liveVisible: false,
+      iViewVisible: false,
+      fee: true,
+      isSettingShow: false,
+      settingData: {
+        code: "1" // 1, 2
+      }
+    };
+  },
+  computed: {
+  },
+  mounted() {
+    if (window.localStorage.getItem("liveModalTime")) {
+      const time = parseInt(window.localStorage.getItem("liveModalTime"));
+      const today = this.getTodayUnix();
+      if (today - time > 86400000 * 5) this.liveVisible = true;
+    } else {
+      this.liveVisible = true;
+    }
+  },
+  methods: {
+    getTodayUnix() {
+      const date = new Date();
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      return date.getTime();
+    },
+    handleLive() {
+      const today = this.getTodayUnix();
+      window.localStorage.setItem("liveModalTime", today);
+    },
+    feeclose() {
+      this.fee = false;
+    },
+    handleOpenSetting() {
+      this.isSettingShow = true;
+    },
+    handleUpdateSettings() {
+      if (window.localStorage.getItem("settings-code")) {
+        this.settingData.code = window.localStorage.getItem("settings-code");
+      }
+    },
+    handleSettingChangeCode(val) {
+      window.localStorage.setItem("settings-code", val);
+    }
+  },
+  mounted() {
+    this.handleUpdateSettings();
+  }
 };
 </script>
 
@@ -23,7 +80,7 @@ html {
 }
 /* placeholder居中显示 */
 .ivu-select-placeholder,
-.ivu-input,
+// .ivu-input,
 .ivu-cascader,
 .ivu-select-single,
 .ivu-select-selection,

@@ -1,33 +1,43 @@
 <style scoped lang="less">
 @import "../config/index.less";
-.container{
+.container {
   display: flex;
   flex-direction: row;
-  .timeBox{
+  .timeBox {
     width: 60%;
     padding: 0;
     margin: 0;
     padding-right: 10px;
-    .date-picker{
+    .date-picker {
       width: 100% !important;
     }
   }
-  .hourBox{
+  .hourBox {
     width: 40%;
     padding: 0;
     margin: 0;
   }
 }
-
 </style>
 <template>
   <div class="container">
     <div class="timeBox">
-      <Date-picker class="date-picker" :disabled="dis" type="date" @on-change="changeTime" v-model="yearData" :placeholder="placeholder" ></Date-picker>
+      <Date-picker
+        class="date-picker"
+        :disabled="dis"
+        type="date"
+        @on-change="changeTime"
+        v-model="yearData"
+        :placeholder="placeholder"
+      ></Date-picker>
     </div>
     <div class="hourBox">
       <Select :disabled="dis" v-model="hourData" placeholder="请选择时间" @on-change="changeTypeValue">
-        <Option :value="item.dataTime" v-for="item in dataList" :key="item.dataTime">{{item.dataTime}}</Option>
+        <Option
+          :value="item.dataTime"
+          v-for="item in dataList"
+          :key="item.dataTime"
+        >{{item.dataTime}}</Option>
       </Select>
     </div>
   </div>
@@ -44,7 +54,7 @@ export default {
   },
   props: {
     time: {
-      type: [String, Number, Date,Boolean]
+      type: [String, Number, Date, Boolean]
     },
     hour: {
       type: String
@@ -53,9 +63,9 @@ export default {
       type: Boolean,
       default: false
     },
-    placeholder:{
-      type:String,
-      default:"开始时间"
+    placeholder: {
+      type: String,
+      default: "开始时间"
     }
   },
   created() {
@@ -69,8 +79,8 @@ export default {
   watch: {
     time: {
       handler(val) {
-        if(!val){
-          this.hourData = this.hour
+        if (!val) {
+          this.hourData = this.hour;
         }
         if (typeof val == "string") {
           this.yearData = val.slice(0, 10);

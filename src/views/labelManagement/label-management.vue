@@ -123,7 +123,6 @@
                                 <Select v-model="formData.brandId" placeholder="请选择品牌归属" clearable>
                                     <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.name }}</Option>
                                 </Select>
-                                <!-- <Input placeholder="请输入品牌归属" v-model="formData.brandName" clearable></Input> -->
                             </Form-item>
                         </div>
                         
